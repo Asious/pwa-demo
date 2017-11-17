@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>worker</title>
+</head>
+<body>
+	<div>
+        <label for="number1">Multiply number 1: </label>    
+        <input type="text" id="number1" value="0">
+      </div>
+      <div>
+        <label for="number2">Multiply number 2: </label>   
+        <input type="text" id="number2" value="0">
+      </div>
+
+      <p class="result">Result: 0</p>
+</body>
+</html>
+<script type="text/javascript">
+var first = document.querySelector('#number1');
+var second = document.querySelector('#number2');
+
+var result = document.querySelector('.result');
+
+if (window.Worker) { // Check if Browser supports the Worker api.
+	// Requires script name as input
+	var myWorker = new Worker("./worker/worker.js");
+	myWorker.onmessage = function(e) {
+		result.textContent = e.data;
+		console.log('Message received from worker');
+	};
+	myWorker.onerror = function(e){
+		console.log(e)
+	}
+
+	first.onchange = function() {
+	  myWorker.postMessage([first.value,second.value]); 
+	  console.log('Message posted to worker');
+	};
+
+	second.onchange = function() {
+	  myWorker.postMessage([first.value,second.value]);
+	  console.log('Message posted to worker');
+	};
+
+
+}
+
+</script>
